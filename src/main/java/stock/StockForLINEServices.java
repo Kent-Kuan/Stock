@@ -42,9 +42,9 @@ public class StockForLINEServices {
 		String presentStr = String.valueOf(Math.round(Double.valueOf(diffStr)/Double.valueOf(yesterEndPrice)*10000)/100.0);
 		StringBuffer sb = new StringBuffer();
 		sb.append("[" + stockNum + "]" + stockName + " \n");
-		sb.append("³Ìªñ¦¨¥æ»ù¡G" + recentTradePrice + ", \n");
-		sb.append("º¦¶^»ù" + String.format("%.2f", Float.valueOf(diffStr)) + ", \n");
-		sb.append("º¦¶^¦Ê¤À¤ñ¡G" + presentStr + "% \n");
+		sb.append("æœ€è¿‘æˆäº¤åƒ¹ï¼š" + recentTradePrice + ", \n");
+		sb.append("æ¼²è·Œåƒ¹" + String.format("%.2f", Float.valueOf(diffStr)) + ", \n");
+		sb.append("æ¼²è·Œç™¾åˆ†æ¯”ï¼š" + presentStr + "% \n");
 		return sb.toString();
 	}
 }
