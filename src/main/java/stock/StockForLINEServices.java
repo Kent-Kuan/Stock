@@ -1,6 +1,5 @@
 package stock;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +19,8 @@ public class StockForLINEServices {
 	
 	public String getStockDetails(String stockNum){
 		String getStockUrl = TWSE_GETSTOCK_API_URL + "&ex_ch=tse_" + stockNum +".tw" + "&_=" + System.currentTimeMillis();
-		Map<String,List<String>> headers = new HashMap<String,List<String>>();
-		headers.put("Cookie", getCookies(TWSE_URL));
+		Map<String,String> headers = new HashMap<String,String>();
+		headers.put("Cookie", getCookies(TWSE_URL).toString());
 		return transferStockDetails(WebUtils.getUrl(getStockUrl, headers),stockNum);
 	}
 	
@@ -61,30 +60,25 @@ public class StockForLINEServices {
 		    text = jsonObject.optJSONObject("message").optString("text");
 		    replyToLINE(replyToken, text);
 		}
-		
 	}
 	
-	private void replyToLINE(String replyToken, String message){
+	public void replyToLINE(String replyToken, String message){
 		JSONObject postData = new JSONObject();
 		JSONObject messageObj = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
 		messageObj.put("type", "text");
-		messageObj.put("message", message);
+		messageObj.put("text", message);
 		jsonArray.put(messageObj);
 		postData.put("replyToken", replyToken);
 		postData.put("messages", jsonArray);
-		
-		WebUtils.posrUrl("https://api.line.me/v2/bot/message/reply", postData, getLINEproperties());
+		System.out.println(postData.toString());
+		WebUtils.postUrl("https://api.line.me/v2/bot/message/reply", postData, getLINEproperties());
 	}
 	
-	private Map<String, List<String>> getLINEproperties(){
-		Map<String, List<String>> porperties = new HashMap<String, List<String>>();
-		List<String> contentTypeValue = new ArrayList<String>();
-		contentTypeValue.add("application/json");
-		List<String> authorizationValue = new ArrayList<String>();
-		authorizationValue.add("Bearer " + TOKEN);
-		porperties.put("Content-Type", contentTypeValue);
-		porperties.put("Authorization", authorizationValue);
+	private Map<String, String> getLINEproperties(){
+		Map<String, String> porperties = new HashMap<String, String>();
+		porperties.put("Content-Type", "application/json");
+		porperties.put("Authorization", "Bearer " + TOKEN);
 		return porperties;
 	}
 	

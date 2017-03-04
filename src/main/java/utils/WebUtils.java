@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class WebUtils {
-  private static HttpURLConnection getConnect(String urlString, String method, Map<String, List<String>> porperties){
+  private static HttpURLConnection getConnect(String urlString, String method, Map<String, String> porperties){
 	  HttpURLConnection urlConnection = null;
 		try {
 			URL url = new URL(urlString);
@@ -22,17 +22,18 @@ public class WebUtils {
 			urlConnection.setRequestMethod(method);
 			if("POST".equals(method)) urlConnection.setDoOutput(true);
 			if(porperties!=null){
-				for(Map.Entry<String, List<String>> entry:porperties.entrySet()){
-					urlConnection.setRequestProperty(entry.getKey(), entry.getValue().toString());
+				for(Map.Entry<String, String> entry:porperties.entrySet()){
+					urlConnection.setRequestProperty(entry.getKey(), entry.getValue());
 				}
 			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return urlConnection;
   }
   
-  public static String getUrl(String urlString, Map<String, List<String>> porperties){
+  public static String getUrl(String urlString, Map<String, String> porperties){
 	  HttpURLConnection urlConnection = getConnect(urlString, "GET", porperties);
 	  StringBuffer sb = new StringBuffer();
 	  String line ;
@@ -47,7 +48,7 @@ public class WebUtils {
 	  return sb.toString();
   }
   
-  public static List<String> getCookieForAPI(String urlString, Map<String, List<String>> porperties){
+  public static List<String> getCookieForAPI(String urlString, Map<String, String> porperties){
 	  HttpURLConnection urlConnection = getConnect(urlString, "GET", porperties);
 	  for(Map.Entry<String, List<String>> headers : urlConnection.getHeaderFields().entrySet()){
 		  if("cookie".equalsIgnoreCase(headers.getKey()) || "Set-Cookie".equalsIgnoreCase(headers.getKey())){
@@ -57,20 +58,18 @@ public class WebUtils {
 	  throw new NullPointerException("Cookies is NULL!");
   }
   
-  public static String posrUrl(String urlString, JSONObject data, Map<String, List<String>> porperties){
+  public static String postUrl(String urlString, JSONObject data, Map<String, String> porperties){
 	  HttpURLConnection urlConnection = getConnect(urlString, "POST", porperties);
 	  StringBuffer sb = new StringBuffer();
 	  String line ;
-	  try (DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
-		     BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"))  ){
+	  try {
+		DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
 		out.writeBytes(data.toString());
 		out.flush();
-		
+		BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
 		while((line=rd.readLine())!=null){
 			sb.append(line);
 		}
-		System.out.println("傳送__"+data.toString());
-		System.out.println("回應__"+line);
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
