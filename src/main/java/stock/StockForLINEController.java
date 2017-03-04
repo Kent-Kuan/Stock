@@ -34,7 +34,7 @@ public class StockForLINEController {
 		System.out.println("表頭___"+headers);
 //		System.out.println("內容__"+reqbody.toString());
 		System.out.println("測試__"+new JSONObject(reqbody));
-//		stockForLINEServices.replyToLINE(requestBody);
+		stockForLINEServices.replyToLINE(requestBody);
 	}
 	
 }
