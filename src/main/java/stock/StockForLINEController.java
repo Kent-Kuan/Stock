@@ -31,7 +31,7 @@ public class StockForLINEController {
 	
 	@PostMapping(value="/Stock")
 	@ResponseBody
-	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody JSONObject jsonObject){
+	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody String jsonObject){
 		System.out.println("表頭___"+headers);
 		System.out.println("內容__"+jsonObject.toString());
 	}
