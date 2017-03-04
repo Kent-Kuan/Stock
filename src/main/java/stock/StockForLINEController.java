@@ -1,7 +1,5 @@
 package stock;
 
-import javax.management.Query;
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +29,12 @@ public class StockForLINEController {
 	
 	@PostMapping(value="/Stock")
 	@ResponseBody
-	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody String reqbody, 
-			 JSONObject jsonObject){
+	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody String reqbody){
+		JSONObject requestBody = new JSONObject(reqbody);
 		System.out.println("表頭___"+headers);
-		System.out.println("內容__"+reqbody.toString());
+//		System.out.println("內容__"+reqbody.toString());
 		System.out.println("測試__"+new JSONObject(reqbody));
+		stockForLINEServices.replyToLINE(requestBody);
 	}
 	
 }

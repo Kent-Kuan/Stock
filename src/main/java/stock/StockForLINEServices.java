@@ -1,9 +1,11 @@
 package stock;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ import utils.WebUtils;
 public class StockForLINEServices {
 	private final String TWSE_URL = "http://mis.twse.com.tw/stock/index.jsp";
 	private final String TWSE_GETSTOCK_API_URL = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?json=1&delay=0";
-	
+	private final String TOKEN = "QRZlCUr/qxMdrCVZ1ca2etNohm0i0jSQFTqFIg8CfnTHX7AdrannGAJz4YkavOvDj3cQgxXrCIYFGbeSFOKNID8Vv2IXdYOz1O/7bxvfmSrQsBvHee2EmyAfS88MCGzS5sOvIN9gV/29VWl2QVOCWwdB04t89/1O/w1cDnyilFU=";
 	
 	public String getStockDetails(String stockNum){
 		String getStockUrl = TWSE_GETSTOCK_API_URL + "&ex_ch=tse_" + stockNum +".tw" + "&_=" + System.currentTimeMillis();
@@ -47,4 +49,45 @@ public class StockForLINEServices {
 		sb.append("漲跌百分比：" + presentStr + "% \n");
 		return sb.toString();
 	}
+	
+	public void replyToLINE(JSONObject requestBody){
+		JSONArray jsonArray = requestBody.optJSONArray("events");
+		JSONObject jsonObject = new JSONObject();
+		String replyToken;
+		String text;
+		for(int i=0, size=jsonArray.length(); i<size; i++){
+			jsonObject = jsonArray.optJSONObject(i);
+		    replyToken = jsonObject.optString("replyToken");
+		    text = jsonObject.optJSONObject("message").optString("text");
+		    replyToLINE(replyToken, text);
+		}
+		
+	}
+	
+	private void replyToLINE(String replyToken, String message){
+		JSONObject postData = new JSONObject();
+		JSONObject messageObj = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		messageObj.put("type", "text");
+		messageObj.put("message", message);
+		jsonArray.put(messageObj);
+		postData.put("replyToken", replyToken);
+		postData.put("messages", jsonArray);
+		
+		WebUtils.posrUrl("https://api.line.me/v2/bot/message/reply", postData, getLINEproperties());
+	}
+	
+	private Map<String, List<String>> getLINEproperties(){
+		Map<String, List<String>> porperties = new HashMap<String, List<String>>();
+		List<String> contentTypeValue = new ArrayList<String>();
+		contentTypeValue.add("application/json");
+		List<String> authorizationValue = new ArrayList<String>();
+		authorizationValue.add("Bearer " + TOKEN);
+		porperties.put("Content-Type", contentTypeValue);
+		porperties.put("Authorization", authorizationValue);
+		return porperties;
+	}
+	
+	
+	
 }
