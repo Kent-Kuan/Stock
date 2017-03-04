@@ -3,6 +3,7 @@ package stock;
 import javax.management.Query;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
@@ -30,9 +31,9 @@ public class StockForLINEController {
 	
 	@PostMapping(value="/Stock")
 	@ResponseBody
-	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody Query query){
+	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody JSONObject jsonObject){
 		System.out.println("表頭___"+headers);
-		System.out.println("內容__"+query.toString());
+		System.out.println("內容__"+jsonObject.toString());
 	}
 	
 }
