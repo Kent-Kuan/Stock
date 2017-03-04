@@ -31,11 +31,11 @@ public class StockForLINEController {
 	
 	@PostMapping(value="/Stock")
 	@ResponseBody
-	public void getStockDeatils(@RequestHeader HttpHeaders headers, String reqbody, 
-			@RequestBody JSONObject jsonObject){
+	public void getStockDeatils(@RequestHeader HttpHeaders headers,@RequestBody String reqbody, 
+			 JSONObject jsonObject){
 		System.out.println("表頭___"+headers);
-//		System.out.println("內容__"+reqbody.toString());
-		System.out.println("測試__"+jsonObject.optJSONArray("events"));
+		System.out.println("內容__"+reqbody.toString());
+		System.out.println("測試__"+new JSONObject(reqbody));
 	}
 	
 }
