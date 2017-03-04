@@ -20,6 +20,7 @@ public class WebUtils {
 			URL url = new URL(urlString);
 			urlConnection = (HttpURLConnection)url.openConnection();
 			urlConnection.setRequestMethod(method);
+			if("POST".equals(method)) urlConnection.setDoOutput(true);
 			if(porperties!=null){
 				for(Map.Entry<String, List<String>> entry:porperties.entrySet()){
 					urlConnection.setRequestProperty(entry.getKey(), entry.getValue().toString());
