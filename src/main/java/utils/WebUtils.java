@@ -1,9 +1,12 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -63,9 +66,10 @@ public class WebUtils {
 	  StringBuffer sb = new StringBuffer();
 	  String line ;
 	  try {
-		DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
-		out.writeBytes(data.toString());
-		out.flush();
+		OutputStream out = urlConnection.getOutputStream();
+		BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(out));
+		bufferedWriter.write(data.toString());
+		bufferedWriter.flush();
 		BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
 		while((line=rd.readLine())!=null){
 			sb.append(line);
