@@ -57,8 +57,9 @@ public class StockForLINEServices {
 		for(int i=0, size=jsonArray.length(); i<size; i++){
 			jsonObject = jsonArray.optJSONObject(i);
 		    replyToken = jsonObject.optString("replyToken");
-		    text = jsonObject.optJSONObject("message").optString("text");
-		    replyToLINE(replyToken, text);
+		    text = extractStockNum(jsonObject.optJSONObject("message").optString("text"));
+		    if("".equals(text))break;
+		    replyToLINE(replyToken, getStockDetails(text));
 		}
 	}
 	
@@ -80,6 +81,13 @@ public class StockForLINEServices {
 		porperties.put("Content-Type", "application/json");
 		porperties.put("Authorization", "Bearer " + TOKEN);
 		return porperties;
+	}
+	
+	private String extractStockNum(String text){
+		if(text.matches("貓貓,\\d{4}")){
+			return text.replaceAll("貓貓,()", "$1");
+		}
+		return "";
 	}
 	
 	
