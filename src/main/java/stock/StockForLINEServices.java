@@ -36,16 +36,21 @@ public class StockForLINEServices {
 			e.printStackTrace();
 			return "Error! JSONException.";
 		}
-		String stockName = json.optString("n");
-		String recentTradePrice = json.optString("z");
-		String yesterEndPrice = json.optString("y");
-		String diffStr = String.valueOf(Double.valueOf(recentTradePrice)-Double.valueOf(yesterEndPrice));
-		String presentStr = String.valueOf(Math.round(Double.valueOf(diffStr)/Double.valueOf(yesterEndPrice)*10000)/100.0);
 		StringBuffer sb = new StringBuffer();
-		sb.append("[" + stockNum + "]" + stockName + " \n");
-		sb.append("最近成交價：" + recentTradePrice + ", \n");
-		sb.append("漲跌價" + String.format("%.2f", Float.valueOf(diffStr)) + ", \n");
-		sb.append("漲跌百分比：" + presentStr + "% \n");
+		try {
+			String stockName = json.optString("n");
+			String recentTradePrice = json.optString("z");
+			String yesterEndPrice = json.optString("y");
+			String diffStr = String.valueOf(Double.valueOf(recentTradePrice)-Double.valueOf(yesterEndPrice));
+			String presentStr = String.valueOf(Math.round(Double.valueOf(diffStr)/Double.valueOf(yesterEndPrice)*10000)/100.0);
+			sb.append("[" + stockNum + "]" + stockName + " \n");
+			sb.append("最近成交價：" + recentTradePrice + ", \n");
+			sb.append("漲跌價" + String.format("%.2f", Float.valueOf(diffStr)) + ", \n");
+			sb.append("漲跌百分比：" + presentStr + "% \n");
+		} catch (NullPointerException e) {
+			sb.append("感謝你對貓貓的愛戴，目前還不支援上市公司以外的股票哦。 \n");
+			sb.append("^_^");
+		}
 		return sb.toString();
 	}
 	
